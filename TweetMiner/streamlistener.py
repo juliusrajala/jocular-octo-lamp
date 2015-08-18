@@ -16,11 +16,10 @@ class wordListener(StreamListener):
     def on_data(self, data):
         while not self.keyPressed:
             try:
-                with open("json/" + self.hashtag + ".json", "a") as f:
-                    print "Tweet caught: " + data.text
-                    f.write(data)
-                    f.close()
-                    return True
+                self.tweets+=1
+                print "Tweet caught: " + data
+                self.write_json(data)
+                return True
             except BaseException as e:
                 print "Error on_data: %s" %str(e)
             return True
@@ -30,6 +29,10 @@ class wordListener(StreamListener):
         while not self.keyPressed:
             print(status)
             return True
+
+    def write_json(self, data):
+        with open("json/" + self.hashtag + ".json", "a") as f:
+                    f.write(data)
 
     #Catches stream disconnection and returns the notice
     def on_disconnect(self, notice):
