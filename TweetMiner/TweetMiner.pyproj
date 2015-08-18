@@ -22,10 +22,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="module1.py">
+    <Compile Include="secrets.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="secrets.py">
+    <Compile Include="streamlistener.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TweetMiner.py" />

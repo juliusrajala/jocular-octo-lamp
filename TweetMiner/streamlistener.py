@@ -1,22 +1,64 @@
 # -*- encoding: utf-8 -*-
 
+import msvcrt as m
+import thread
 from tweepy import Stream
 from tweepy.streaming import StreamListener
 
+#Class wordlistener extends streamlistener is used to follow the stream
 class wordListener(StreamListener):
-    def on_data(self, data):
-        try:
-            with open("twit_stream.json", "a") as f:
-                f.write(data)
-                return True
-        except BaseException as e:
-            print "Error on_data: %s" %str(e)
-        return True
+    def __init__(self, criteria):
+        self.hashtag = criteria
+        self.keyPressed = False
+        self.tweets = 0
 
+    #Catches tweets and writes them to an according file
+    def on_data(self, data):
+        while not self.keyPressed:
+            try:
+                with open(self.hashtag + ".json", "a") as f:
+                    print "Tweet caught: " + data.text
+                    f.write(data)
+                    f.close()
+                    return True
+            except BaseException as e:
+                print "Error on_data: %s" %str(e)
+            return True
+
+    #Catches errors and returns the error message.
     def on_error(self, error):
-        print(status)
-        return True
+        while not self.keyPressed:
+            print(status)
+            return True
+
+    #Catches stream disconnection and returns the notice
+    def on_disconnect(self, notice):
+        print "Disconnected: "+ notice
+
+def quit():
+    global running 
+    print "Closing down the stream"
+    running = False
+
+def wait():
+    m.getch()
+    if m.getch == "a":
+        quit()
 
 def main(auth, criteria):
-    twitterStream = Stream(auth, wordListener())
-    twitterStream.filter(track=["#python"])
+    global running
+    running = True
+    print criteria
+    criteria = criteria[0] if str(criteria[0])[0] == "#" else "#"+criteria[0]
+    thread.start_new_thread(wait, ())
+    while running:
+        try:
+            print "Initializing listener and starting stream"
+            listener = wordListener(criteria[1:])
+            print "ctrl + c to disconnect"
+            twitterStream = Stream(auth, listener)
+            twitterStream.filter(track=[criteria])
+        except KeyboardInterrupt:
+            print "Caught keyboard interruption."
+            twitterStream.disconnect()
+            break

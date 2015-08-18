@@ -1,28 +1,32 @@
 # -*- encoding: utf-8 -*-
 
-'''
-  TweetMiner Documentation
-==========================
-
-This TweetCrawler is a pet project I built on a lazy afternoon in my civil service. It'll eventually
-be able to do several tasks related to twitter and twitter data, but for now it's a work in progress.
-
-- Julius Rajala, 2015
-
- Controls
-==========================
-
- Command       : Operation
-==========================
-
-gettimeline n : Gets n number of latest items from your timeline.
-status        : Returns the number of API calls you have left on different 
-                tasks.
-exit          : Exit the application
-
-'''
 
 class TweetApp(object):
+    '''
+     TweetMiner Documentation
+    ==========================
+
+    This TweetCrawler is a pet project I built on a lazy 
+    afternoon in my civil service. It'll eventually
+    be able to do several tasks related to twitter and 
+    twitter data, but for now it's a work in progress.
+
+    - Julius Rajala, 2015
+
+     Controls
+    ===========================
+
+     Command       : Operation
+    ===========================
+
+    gettimeline n : Gets n number of latest items from your timeline.
+    status        : Returns the number of API calls you have left on different 
+                    tasks.
+    stream #word  : Starts a twitter stream, following #word
+    exit          : Exit the application
+    docs          : Prints this documentation again.
+
+    '''
     def __init__(self):
         self.running = True
 
@@ -39,9 +43,13 @@ class TweetApp(object):
                         "gettimeline": self.timeLine,
                         "exit": self.quit,
                         "status":self.getStatus,
-                        "stream":self.getStream
+                        "stream":self.getStream,
+                        "docs":self.printDocs
                         }
     
+    def printDocs(self,extra):
+        print self.__doc__
+
     def getStream(self, extra):
         streamlistener.main(self.auth, extra)
 
@@ -62,7 +70,7 @@ class TweetApp(object):
 
     def run(self):
         while self.running:
-            print "Calls remaining: " 
+            print "Commandline: (Write docs for help)" 
             command = raw_input(">> ").lower()
             command = command.split(" ")
             if command[0] in self.controls:
@@ -84,5 +92,4 @@ if __name__ == "__main__":
     from lib import secrets as s
     import streamlistener
     
-    print __doc__
     TweetApp().run()
