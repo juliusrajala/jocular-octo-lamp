@@ -15,6 +15,7 @@ Controls
 Command             Operation
 
 GetTimeLine n   :   Gets n number of latest items from your timeline.
+GetStatus       :   Returns the number of API calls you have left on different tasks
 exit            :   Exit the application
 
 '''
@@ -34,18 +35,25 @@ class TweetApp(object):
 
         self.controls={ 
                         "gettimeline": self.timeLine,
-                        "exit": self.quit
+                        "exit": self.quit,
+                        "status":self.getStatus
                         
                         }
     def quit(self, extra):
         self.running = False
 
+    def getStatus(self, extra):
+        calls = self.api.rate_limit_status()
+        for key in calls:
+            print key + " : " + calls[key]
+
     def run(self):
         while self.running:
+            print "Calls remaining: " 
             command = raw_input(">> ").lower()
             command = command.split(" ")
             if command[0] in self.controls:
-                self.controls[command[0]](command[1:])
+                self.controls[command[0]](command[1:] if len(command) >=2 else "Nothing here")
 
 
     def timeLine(self, amount):
