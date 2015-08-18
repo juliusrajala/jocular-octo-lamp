@@ -1,22 +1,24 @@
 # -*- encoding: utf-8 -*-
 
 '''
-TweetBot Documentation
-======================
+  TweetMiner Documentation
+==========================
 
 This TweetCrawler is a pet project I built on a lazy afternoon in my civil service. It'll eventually
 be able to do several tasks related to twitter and twitter data, but for now it's a work in progress.
 
 - Julius Rajala, 2015
 
-Controls
-========
+ Controls
+==========================
 
-Command             Operation
+ Command       : Operation
+==========================
 
-GetTimeLine n   :   Gets n number of latest items from your timeline.
-GetStatus       :   Returns the number of API calls you have left on different tasks
-exit            :   Exit the application
+gettimeline n : Gets n number of latest items from your timeline.
+status        : Returns the number of API calls you have left on different 
+                tasks.
+exit          : Exit the application
 
 '''
 
@@ -36,16 +38,27 @@ class TweetApp(object):
         self.controls={ 
                         "gettimeline": self.timeLine,
                         "exit": self.quit,
-                        "status":self.getStatus
-                        
+                        "status":self.getStatus,
+                        "stream":self.getStream
                         }
+    
+    def getStream(self, extra):
+        streamlistener.main(self.auth, extra)
+
     def quit(self, extra):
         self.running = False
 
     def getStatus(self, extra):
         calls = self.api.rate_limit_status()
-        for key in calls:
-            print key + " : " + calls[key]
+        for keys in calls:
+            print keys + " : " + str(calls[keys])
+            
+            if keys == "rate_limit_context":
+                print "Nothing here"
+            else:
+                print keys
+                for a in keys:
+                    print a + " : "+ keys[a]
 
     def run(self):
         while self.running:
@@ -69,6 +82,7 @@ if __name__ == "__main__":
     import tweepy
     from tweepy import OAuthHandler
     from lib import secrets as s
+    import streamlistener
     
     print __doc__
     TweetApp().run()
