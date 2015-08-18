@@ -68,7 +68,7 @@ class TweetApp(object):
 if __name__ == "__main__":
     import tweepy
     from tweepy import OAuthHandler
-    import secrets as s
+    from lib import secrets as s
     
     print __doc__
     TweetApp().run()
