@@ -16,7 +16,7 @@ class wordListener(StreamListener):
     def on_data(self, data):
         while not self.keyPressed:
             try:
-                with open(self.hashtag + ".json", "a") as f:
+                with open("json/" + self.hashtag + ".json", "a") as f:
                     print "Tweet caught: " + data.text
                     f.write(data)
                     f.close()

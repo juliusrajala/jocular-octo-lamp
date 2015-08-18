@@ -47,15 +47,19 @@ class TweetApp(object):
                         "docs":self.printDocs
                         }
     
+    #Prints application documentation
     def printDocs(self,extra):
         print self.__doc__
 
+    #Starts the streaming service
     def getStream(self, extra):
         streamlistener.main(self.auth, extra)
 
+    #Closes the application
     def quit(self, extra):
         self.running = False
 
+    #A working in progress method to check your remaining api calls
     def getStatus(self, extra):
         calls = self.api.rate_limit_status()
         for keys in calls:
@@ -76,7 +80,7 @@ class TweetApp(object):
             if command[0] in self.controls:
                 self.controls[command[0]](command[1:] if len(command) >=2 else "Nothing here")
 
-
+    #Returns tweets from users timeline
     def timeLine(self, amount):
         if amount is None:
             amount = 10
