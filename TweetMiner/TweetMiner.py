@@ -1,10 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-import tweepy
-from tweepy import OAuthHandler
-
-import secrets as s
-
 '''
 TweetBot Documentation
 ======================
@@ -20,11 +15,14 @@ Controls
 Command             Operation
 
 GetTimeLine n   :   Gets n number of latest items from your timeline.
+exit            :   Exit the application
 
 '''
 
 class TweetApp(object):
     def __init__(self):
+        self.running = True
+
         self.consumer_key = s.consumer_key
         self.consumer_secret = s.consumer_secret
         self.access_token = s.access_token
@@ -35,16 +33,19 @@ class TweetApp(object):
         self.api = tweepy.API(self.auth)
 
         self.controls={ 
-                        "gettimeline": self.timeLine
+                        "gettimeline": self.timeLine,
+                        "exit": self.quit
                         
                         }
+    def quit(self, extra):
+        self.running = False
 
     def run(self):
-        while running:
-            command = raw_input(">").lower()
+        while self.running:
+            command = raw_input(">> ").lower()
             command = command.split(" ")
-            if command[0] in controls:
-                controls[command[0]](command[1:])
+            if command[0] in self.controls:
+                self.controls[command[0]](command[1:])
 
 
     def timeLine(self, amount):
@@ -57,4 +58,9 @@ class TweetApp(object):
                 UnicodeEncodeError
 
 if __name__ == "__main__":
+    import tweepy
+    from tweepy import OAuthHandler
+    import secrets as s
+    
+    print __doc__
     TweetApp().run()
