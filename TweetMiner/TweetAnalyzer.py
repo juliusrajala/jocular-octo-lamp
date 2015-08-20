@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from nltk.tokenize import word_tokenize
+import re
 
-global emoticonsStr
+global emoticonStr
 global regexStr
 
 emoticonStr = r"""
@@ -13,7 +14,7 @@ emoticonStr = r"""
         )"""
 
 regexStr = [
-    emoticonsStr,
+    emoticonStr,
     r'<[^>]+>', # HTML tags
     r'(?:@[\w_]+)', # @-mentions
     r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
@@ -25,4 +26,17 @@ regexStr = [
     r'(?:\S)' # anything else
 ]
 
-tokensRe = re.compile
+tokensRe = re.compile(r'('+''.join(regexStr)+')', re.VERBOSE | re.IGNORECASE)
+emoticonRe = re.compile(r'^'+emoticonStr+'$', re.VERBOSE | re.IGNORECASE)
+
+def tokenize(s):
+    return tokensRe.findall(s)
+
+def preprocess(s, lowercase = False):
+    tokens = tokenize(s)
+    if lowercase:
+        tokens = [token if emoticonRe.search(token) else token.lower() for token in tokens]
+    return tokens
+
+tweet = "RT @marcobonzanini: just an example! :D http://example.com #NLP"
+print preprocess(tweet)
