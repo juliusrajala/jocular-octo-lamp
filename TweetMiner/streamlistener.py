@@ -9,10 +9,11 @@ from tweepy.streaming import StreamListener
 class wordListener(StreamListener):
     def __init__(self, criteria):
         self.hashtag = ""
-        for x in range(len(criteria)):
+        for x in range(0,len(criteria)):
             self.hashtag += criteria[x]+"_"
         self.hashtag.replace("#", "")
-        self.hashtag = self.hashtag[:-1].encode("cp1252")
+        self.hashtag = self.hashtag[:-1]
+        self.hashtag = self.hashtag.encode("cp1252")
         print self.hashtag
         self.keyPressed = False
         self.tweets = 0
@@ -66,7 +67,7 @@ def main(auth, criteria):
     while running:
         try:
             print "Initializing listener and starting stream"
-            listener = wordListener(criteria[1:])
+            listener = wordListener(criteria[0:])
             print "ctrl + c to disconnect"
             
             twitterStream = Stream(auth, listener)
