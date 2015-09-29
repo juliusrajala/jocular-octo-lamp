@@ -53,6 +53,12 @@ class TweetApp(object):
 
     #Starts the streaming service
     def getStream(self, extra):
+        # enc = codecs.lookup(extra[0].encoding)
+        for x in range(len(extra)):
+            print extra[x]
+            extra[x] = extra[x].decode("cp1252")
+            print extra[x].encode("cp1252")
+
         streamlistener.main(self.auth, extra)
 
     #Closes the application
@@ -92,6 +98,7 @@ class TweetApp(object):
 
 if __name__ == "__main__":
     import tweepy
+    import codecs
     from tweepy import OAuthHandler
     from lib import secrets as s
     import streamlistener
